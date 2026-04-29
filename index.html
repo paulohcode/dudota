@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dudota Doces</title>
+  <meta name="description" content="Dudota Doces - tradição e sabor há mais de 40 anos em Umuarama e região.">
+  <style>
+    :root {
+      --blue:#0536d8;
+      --blue-dark:#022aab;
+      --red:#e63946;
+      --red-dark:#c81d2a;
+      --white:#ffffff;
+      --bg:#f5f7fb;
+      --text:#1f2a37;
+      --muted:#5d6b82;
+      --shadow:0 12px 30px rgba(10,30,90,.12);
+      --radius:20px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a { text-decoration:none; color:inherit; }
+    img { max-width:100%; display:block; }
+    .container { width:min(1180px, 92%); margin:0 auto; }
+    header {
+      position:sticky; top:0; z-index:20;
+      background:rgba(5,54,216,.94);
+      backdrop-filter: blur(10px);
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+    .nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:20px;
+    }
+    .brand {
+      display:flex; align-items:center; gap:14px; color:white;
+      font-weight:700;
+    }
+    .brand img {
+      width:64px; height:64px; object-fit:cover; border-radius:14px;
+      background:#fff; padding:4px; box-shadow: var(--shadow);
+    }
+    .brand-text small { display:block; font-weight:400; opacity:.85; }
+    .menu {
+      display:flex; gap:20px; color:#fff; font-weight:600; flex-wrap:wrap; align-items:center;
+    }
+    .menu a:hover { opacity:.85; }
+
+    /* Cart link in header */
+    .cart-link {
+      position:relative; display:flex; align-items:center; gap:6px;
+      background:var(--red); color:#fff; padding:10px 16px; border-radius:12px;
+      font-weight:700; font-size:.95rem; transition:.2s;
+    }
+    .cart-link:hover { background:var(--red-dark); transform:translateY(-1px); }
+    .cart-icon { font-size:1.2rem; }
+    .cart-count-badge {
+      background:#fff; color:var(--red); font-size:.75rem; font-weight:800;
+      min-width:20px; height:20px; border-radius:50%; display:none; place-items:center;
+      line-height:1;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(5,54,216,.92), rgba(5,54,216,.72)),
+        radial-gradient(circle at top right, rgba(255,255,255,.2), transparent 30%);
+      color:#fff;
+      padding:64px 0 42px;
+      overflow:hidden;
+    }
+    .hero-grid {
+      display:grid; grid-template-columns: 1.15fr .85fr; gap:32px; align-items:center;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 4vw, 4.2rem);
+      line-height:1.05; margin:0 0 16px;
+    }
+    .hero p {
+      font-size:1.08rem; max-width:640px; color:rgba(255,255,255,.9); margin:0 0 22px;
+    }
+    .hero-actions {
+      display:flex; gap:14px; flex-wrap:wrap; margin-bottom:24px;
+    }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:14px 20px; border-radius:14px; font-weight:700; transition:.2s;
+    }
+    .btn-primary { background:var(--red); color:#fff; box-shadow: var(--shadow); }
+    .btn-primary:hover { background:var(--red-dark); transform:translateY(-1px); }
+    .btn-secondary { background:#fff; color:var(--blue); }
+    .hero-points {
+      display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px;
+    }
+    .point {
+      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16);
+      padding:14px; border-radius:16px;
+    }
+    .hero-card {
+      background:#fff; color:var(--text); border-radius:26px; padding:20px;
+      box-shadow: var(--shadow);
+    }
+    .hero-card img {
+      border-radius:18px; aspect-ratio: 1 / 1; object-fit:cover;
+    }
+    .hero-card .mini {
+      margin-top:14px; display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+    }
+    .mini-box {
+      background:#f4f6ff; border-radius:14px; padding:14px;
+    }
+
+    section { padding:64px 0; }
+    .section-title {
+      display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:24px;
+    }
+    .section-title h2 { font-size: clamp(1.7rem, 2.3vw, 2.5rem); margin:0; }
+    .section-title p { margin:0; color:var(--muted); max-width:700px; }
+
+    .highlights {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+    }
+    .highlight {
+      background:#fff; border-radius:22px; padding:22px; box-shadow: var(--shadow);
+    }
+    .highlight h3 { margin:10px 0 8px; }
+
+    .filters {
+      display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;
+    }
+    .filter-btn {
+      border:none; background:#fff; color:var(--blue); padding:10px 16px; border-radius:999px;
+      font-weight:700; cursor:pointer; box-shadow: var(--shadow);
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background:var(--blue); color:#fff;
+    }
+
+    .grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+    }
+    .card {
+      background:#fff; border-radius:24px; overflow:hidden; box-shadow: var(--shadow);
+      display:flex; flex-direction:column;
+    }
+    .img-wrap { position:relative; background:#ffffff; }
+    .img-wrap img {
+      width:100%; aspect-ratio: 4/3; object-fit:cover; padding:8px;
+    }
+    .badge {
+      position:absolute; top:14px; left:14px; background:var(--blue); color:#fff;
+      padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:700;
+    }
+    .card-body { padding:18px; display:flex; flex-direction:column; gap:10px; height:100%; }
+    .card-body h3 { margin:0; font-size:1.18rem; }
+    .meta { color:var(--red); font-weight:700; margin:0; }
+    .card-body p { color:var(--muted); margin:0; }
+    .card-footer {
+      margin-top:auto; display:flex; justify-content:space-between; align-items:center; gap:10px;
+      padding-top:10px; flex-wrap:wrap;
+    }
+    .card-footer strong { font-size:1.15rem; color:var(--blue); }
+    .card-footer a {
+      background:var(--red); color:#fff; padding:10px 14px; border-radius:12px; font-weight:700;
+      font-size:.85rem;
+    }
+
+    /* Add to cart button */
+    .add-cart-btn {
+      background:var(--blue); color:#fff; padding:10px 14px; border-radius:12px;
+      font-weight:700; font-size:.9rem; border:none; cursor:pointer; transition:.2s;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .add-cart-btn:hover { background:var(--blue-dark); transform:translateY(-1px); }
+    .add-cart-btn.added { background:#25d366; }
+
+    .about-wrap {
+      display:grid; grid-template-columns: 1fr 1fr; gap:22px;
+    }
+    .panel {
+      background:#fff; border-radius:24px; padding:26px; box-shadow: var(--shadow);
+    }
+    .stats {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px;
+    }
+    .stat {
+      background:#f5f7ff; border-radius:18px; padding:16px; text-align:center;
+    }
+    .contact-box {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .contact-item {
+      background:#fff; border-radius:22px; padding:22px; box-shadow: var(--shadow);
+    }
+    footer {
+      background:#08184f; color:#fff; padding:26px 0;
+    }
+    footer .foot {
+      display:flex; justify-content:space-between; gap:20px; align-items:center; flex-wrap:wrap;
+    }
+
+    .whatsapp {
+      position:fixed; right:18px; bottom:18px; z-index:30;
+      background:#25d366; color:#fff; width:62px; height:62px; border-radius:50%;
+      display:grid; place-items:center; box-shadow: var(--shadow); font-size:1.7rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .about-wrap, .contact-box, .grid, .highlights {
+        grid-template-columns:1fr 1fr;
+      }
+    }
+    @media (max-width: 680px) {
+      .menu { display:none; }
+      .hero-grid, .about-wrap, .contact-box, .grid, .highlights, .hero-points, .stats {
+        grid-template-columns:1fr;
+      }
+      .section-title {
+        flex-direction:column; align-items:start;
+      }
+      .card-footer {
+        flex-direction:column; align-items:start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#inicio">
+        <img src="assets/logo.jpeg" alt="Logo Dudota">
+        <div class="brand-text">
+          Dudota Doces
+          <small>Umuarama e região</small>
+        </div>
+      </a>
+      <nav class="menu">
+        <a href="#inicio">Início</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <a class="cart-link" href="carrinho.html">
+          <span class="cart-icon">🛒</span>
+          Carrinho
+          <span class="cart-count-badge" id="cart-count">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <h1>Dudota Doces</h1>
+          <p>Tradição e sabor há mais de 40 anos. Uma empresa familiar de Umuarama que marcou gerações com doces clássicos, qualidade e carinho em cada detalhe.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#produtos">Ver produtos</a>
+            <a class="btn btn-secondary" target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20vim%20pelo%20site%20da%20Dudota%20Doces.">Pedir no WhatsApp</a>
+          </div>
+          <div class="hero-points">
+            <div class="point"><strong>+40 anos</strong><br>de tradição</div>
+            <div class="point"><strong>3 lojas</strong><br>em Umuarama</div>
+            <div class="point"><strong>Entrega</strong><br>em Umuarama e região</div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="assets/canudo_bandeja.jpeg" alt="Canudo frito recheado">
+          <div class="mini">
+            <div class="mini-box"><strong>Atendimento</strong><br>09:00 às 18:30</div>
+            <div class="mini-box"><strong>WhatsApp</strong><br>(44) 99884-0243</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-title">
+          <h2>Por que escolher a Dudota?</h2>
+          <p>Uma marca tradicional da região, com produtos conhecidos, apresentação profissional e variedade para agradar diferentes gostos.</p>
+        </div>
+        <div class="highlights">
+          <div class="highlight"><div>🍬</div><h3>Sabores que marcaram gerações</h3><p>Receitas e produtos com forte memória afetiva para o público da região.</p></div>
+          <div class="highlight"><div>🏪</div><h3>Presença local</h3><p>Empresa familiar com três lojas em Umuarama e foco em expansão.</p></div>
+          <div class="highlight"><div>🚚</div><h3>Entrega e retirada</h3><p>Atendimento de pedidos com foco em praticidade para clientes de Umuarama e região.</p></div>
+          <div class="highlight"><div>⭐</div><h3>Mix completo</h3><p>Canudos, paçocas, doces em barra, choco mole e vários clássicos em um só lugar.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="produtos">
+      <div class="container">
+        <div class="section-title">
+          <h2>Nossos produtos</h2>
+          <p>Selecione uma categoria ou navegue por todos os itens disponíveis.</p>
+        </div>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="destaque">Destaque</button>
+          <button class="filter-btn" data-filter="tradicionais">Tradicionais</button>
+          <button class="filter-btn" data-filter="barras">Barras</button>
+          <button class="filter-btn" data-filter="amendoim">Amendoim</button>
+          <button class="filter-btn" data-filter="especiais">Especiais</button>
+          <button class="filter-btn" data-filter="sortidos">Sortidos</button>
+        </div>
+        <div class="grid" id="productGrid">
+          
+    <article class="card" data-category="destaque" data-product-id="canudo-bandeja">
+      <div class="img-wrap">
+        <img src="assets/canudo_bandeja.jpeg" alt="Canudo Frito Recheado">
+        <span class="badge">Destaque</span>
+      </div>
+      <div class="card-body">
+        <h3>Canudo Frito Recheado</h3>
+        <p class="meta">Bandeja</p>
+        <p>Canudos crocantes recheados com delicioso doce de leite. Um clássico irresistível para festas, reuniões e momentos especiais.</p>
+        <div class="card-footer">
+          <strong>R$ 45,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('canudo-bandeja')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Canudo%20Frito%20Recheado">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="tradicionais" data-product-id="pacoca-caseira">
+      <div class="img-wrap">
+        <img src="assets/pacoca_caseira.jpeg" alt="Paçoca Caseira">
+        <span class="badge">Tradicionais</span>
+      </div>
+      <div class="card-body">
+        <h3>Paçoca Caseira</h3>
+        <p class="meta">Tradicional</p>
+        <p>Paçoca artesanal com sabor intenso de amendoim, receita que lembra tradição e carinho em cada pedaço.</p>
+        <div class="card-footer">
+          <strong>R$ 30,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('pacoca-caseira')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Paçoca%20Caseira">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="tradicionais" data-product-id="pe-moleque">
+      <div class="img-wrap">
+        <img src="assets/pe_moleque.jpeg" alt="Pé de Moleque">
+        <span class="badge">Tradicionais</span>
+      </div>
+      <div class="card-body">
+        <h3>Pé de Moleque</h3>
+        <p class="meta">Tradicional</p>
+        <p>Doce crocante de amendoim, com sabor marcante e receita clássica que atravessa gerações.</p>
+        <div class="card-footer">
+          <strong>R$ 30,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('pe-moleque')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Pé%20de%20Moleque">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="destaque" data-product-id="canudo-8">
+      <div class="img-wrap">
+        <img src="assets/canudo_8.jpeg" alt="Canudo Frito">
+        <span class="badge">Destaque</span>
+      </div>
+      <div class="card-body">
+        <h3>Canudo Frito</h3>
+        <p class="meta">8 unidades</p>
+        <p>Versão prática com 8 unidades, perfeita para consumo rápido, lanche ou revenda.</p>
+        <div class="card-footer">
+          <strong>R$ 8,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('canudo-8')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Canudo%20Frito">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="sortidos" data-product-id="geleia-frutas">
+      <div class="img-wrap">
+        <img src="assets/geleia_frutas.jpeg" alt="Geleia de Frutas">
+        <span class="badge">Sortidos</span>
+      </div>
+      <div class="card-body">
+        <h3>Geleia de Frutas</h3>
+        <p class="meta">Pacote com 50 unidades</p>
+        <p>Docinhos macios e açucarados, ideais para compor mesas, kits e vendas em quantidade.</p>
+        <div class="card-footer">
+          <strong>R$ 27,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('geleia-frutas')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Geleia%20de%20Frutas">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="sortidos" data-product-id="bananitas">
+      <div class="img-wrap">
+        <img src="assets/bananitas.jpeg" alt="Bananitas">
+        <span class="badge">Sortidos</span>
+      </div>
+      <div class="card-body">
+        <h3>Bananitas</h3>
+        <p class="meta">Pacote com 50 unidades</p>
+        <p>Doces sabor banana com textura macia e toque açucarado, ótimos para sortimento e lembrança afetiva.</p>
+        <div class="card-footer">
+          <strong>R$ 27,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('bananitas')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Bananitas">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="barras" data-product-id="doce-leite">
+      <div class="img-wrap">
+        <img src="assets/doce_leite.jpeg" alt="Doce de Leite">
+        <span class="badge">Barras</span>
+      </div>
+      <div class="card-body">
+        <h3>Doce de Leite</h3>
+        <p class="meta">Pacote com 50 unidades</p>
+        <p>Doce em barra com sabor suave e cremoso, ótimo para mesas, brindes e consumo do dia a dia.</p>
+        <div class="card-footer">
+          <strong>R$ 27,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('doce-leite')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Doce%20de%20Leite">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="barras" data-product-id="fondant-leite-po">
+      <div class="img-wrap">
+        <img src="assets/fondant_leite_po.jpeg" alt="Fondant de Leite em Pó">
+        <span class="badge">Barras</span>
+      </div>
+      <div class="card-body">
+        <h3>Fondant de Leite em Pó</h3>
+        <p class="meta">Pacote com 50 unidades</p>
+        <p>Doce em barra delicado, com sabor marcante de leite em pó e textura que derrete na boca.</p>
+        <div class="card-footer">
+          <strong>R$ 28,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('fondant-leite-po')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Fondant%20de%20Leite%20em%20Pó">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="barras" data-product-id="fondant-chocolate">
+      <div class="img-wrap">
+        <img src="assets/fondant_chocolate.jpeg" alt="Fondant Leite em Pó com Chocolate">
+        <span class="badge">Barras</span>
+      </div>
+      <div class="card-body">
+        <h3>Fondant Leite em Pó com Chocolate</h3>
+        <p class="meta">Pacote com 50 unidades</p>
+        <p>Combinação de leite em pó com chocolate em barra, unindo cremosidade e sabor intenso.</p>
+        <div class="card-footer">
+          <strong>R$ 28,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('fondant-chocolate')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Fondant%20Leite%20em%20Pó%20com%20Chocolate">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="amendoim" data-product-id="pacoca-rolha-choc">
+      <div class="img-wrap">
+        <img src="assets/pacoca_rolha_choc.jpeg" alt="Paçoca Rolha com Chocolate">
+        <span class="badge">Amendoim</span>
+      </div>
+      <div class="card-body">
+        <h3>Paçoca Rolha com Chocolate</h3>
+        <p class="meta">Pote</p>
+        <p>Paçoca rolha com cobertura sabor chocolate, prática e muito querida para lembranças e consumo rápido.</p>
+        <div class="card-footer">
+          <strong>R$ 26,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('pacoca-rolha-choc')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Paçoca%20Rolha%20com%20Chocolate">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="amendoim" data-product-id="pacoca-rolha-trad">
+      <div class="img-wrap">
+        <img src="assets/pacoca_rolha_trad.jpeg" alt="Paçoca Rolha Tradicional">
+        <span class="badge">Amendoim</span>
+      </div>
+      <div class="card-body">
+        <h3>Paçoca Rolha Tradicional</h3>
+        <p class="meta">Pote</p>
+        <p>Versão tradicional da paçoca rolha, leve, saborosa e com aquele gostinho de infância.</p>
+        <div class="card-footer">
+          <strong>R$ 24,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('pacoca-rolha-trad')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Paçoca%20Rolha%20Tradicional">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="amendoim" data-product-id="pe-moleque-croc">
+      <div class="img-wrap">
+        <img src="assets/pe_moleque_crocante.jpeg" alt="Pé de Moleque Crocante">
+        <span class="badge">Amendoim</span>
+      </div>
+      <div class="card-body">
+        <h3>Pé de Moleque Crocante</h3>
+        <p class="meta">Tamanho G</p>
+        <p>Pé de moleque crocante em versão maior, com amendoins inteiros e visual atraente para venda.</p>
+        <div class="card-footer">
+          <strong>R$ 27,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('pe-moleque-croc')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Pé%20de%20Moleque%20Crocante">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="especiais" data-product-id="choco-mole-branco">
+      <div class="img-wrap">
+        <img src="assets/choco_mole_branco.jpeg" alt="Choco Mole Branco">
+        <span class="badge">Especiais</span>
+      </div>
+      <div class="card-body">
+        <h3>Choco Mole Branco</h3>
+        <p class="meta">Caixa com 50 unidades</p>
+        <p>Doce macio com cobertura de chocolate branco ao leite, delicado e ideal para quem gosta de sabores suaves.</p>
+        <div class="card-footer">
+          <strong>R$ 35,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('choco-mole-branco')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Choco%20Mole%20Branco">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="especiais" data-product-id="choco-mole">
+      <div class="img-wrap">
+        <img src="assets/choco_mole.jpeg" alt="Choco Mole">
+        <span class="badge">Especiais</span>
+      </div>
+      <div class="card-body">
+        <h3>Choco Mole</h3>
+        <p class="meta">Caixa com 50 unidades</p>
+        <p>Versão clássica com cobertura de chocolate ao leite, equilibrando maciez e intensidade.</p>
+        <div class="card-footer">
+          <strong>R$ 35,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('choco-mole')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Choco%20Mole">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="card" data-category="especiais" data-product-id="maria-bonita">
+      <div class="img-wrap">
+        <img src="assets/maria_bonita.jpeg" alt="Maria Bonita">
+        <span class="badge">Especiais</span>
+      </div>
+      <div class="card-body">
+        <h3>Maria Bonita</h3>
+        <p class="meta">Caixa com 50 unidades</p>
+        <p>Bolachinhas com recheio de gelatina sabor leite condensado, perfeitas para um toque divertido e diferente.</p>
+        <div class="card-footer">
+          <strong>R$ 35,00</strong>
+          <button class="add-cart-btn" onclick="addToCart('maria-bonita')">🛒 Comprar</button>
+          <a target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20tenho%20interesse%20em%20Maria%20Bonita">WhatsApp</a>
+        </div>
+      </div>
+    </article>
+    
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre">
+      <div class="container about-wrap">
+        <div class="panel">
+          <h2>Sobre a Dudota Doces</h2>
+          <p>A Dudota Doces, fundada por Carlos Dota e com mais de 40 anos de tradição em Umuarama-PR, é uma empresa familiar conhecida por sabores que marcaram gerações.</p>
+          <p>Com três lojas na cidade e foco em expansão, a empresa busca constantemente melhorias e adaptação, destacando-se no comércio varejista de alimentos na região.</p>
+          <div class="stats">
+            <div class="stat"><strong>+40 anos</strong><br>de tradição</div>
+            <div class="stat"><strong>3 lojas</strong><br>na cidade</div>
+            <div class="stat"><strong>Umuarama</strong><br>e região</div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Apresentação para trabalho escolar</h2>
+          <p>Este site foi montado em estilo profissional, com foco em valorizar a marca, destacar a linha de produtos e mostrar como a Dudota Doces pode se apresentar online de forma moderna e confiável.</p>
+          <p>O layout usa as cores da marca, navegação simples, cards de produto e botão de contato direto pelo WhatsApp.</p>
+          <a class="btn btn-primary" target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20Dudota%20Doces.">Falar com a Dudota</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato">
+      <div class="container">
+        <div class="section-title">
+          <h2>Contato</h2>
+          <p>Faça pedidos, tire dúvidas e combine entrega ou retirada.</p>
+        </div>
+        <div class="contact-box">
+          <div class="contact-item">
+            <h3>WhatsApp</h3>
+            <p><strong>(44) 99884-0243</strong></p>
+            <p>Atendimento rápido para pedidos e informações.</p>
+          </div>
+          <div class="contact-item">
+            <h3>Horário</h3>
+            <p><strong>09:00 às 18:30</strong></p>
+            <p>Entrega e retirada durante o horário de atendimento.</p>
+          </div>
+          <div class="contact-item">
+            <h3>Região</h3>
+            <p><strong>Umuarama e região</strong></p>
+            <p>Atendimento local com foco em praticidade e proximidade.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div><strong>Dudota Doces</strong><br>Tradição, qualidade e sabor em Umuarama.</div>
+      <div>WhatsApp: (44) 99884-0243</div>
+    </div>
+  </footer>
+
+  <a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Olá%2C%20vim%20pelo%20site%20da%20Dudota%20Doces." aria-label="WhatsApp">💬</a>
+
+  <script src="cart.js"></script>
+  <script>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.card');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        cards.forEach(card => {
+          const show = filter === 'all' || card.dataset.category === filter;
+          card.style.display = show ? 'flex' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

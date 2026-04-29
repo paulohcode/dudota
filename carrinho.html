@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho – Dudota Doces</title>
+  <meta name="description" content="Carrinho de compras – Dudota Doces">
+  <style>
+    :root {
+      --blue:#0536d8;
+      --blue-dark:#022aab;
+      --red:#e63946;
+      --red-dark:#c81d2a;
+      --white:#ffffff;
+      --bg:#f5f7fb;
+      --text:#1f2a37;
+      --muted:#5d6b82;
+      --shadow:0 12px 30px rgba(10,30,90,.12);
+      --radius:20px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a { text-decoration:none; color:inherit; }
+    img { max-width:100%; display:block; }
+    .container { width:min(1180px, 92%); margin:0 auto; }
+
+    /* Header */
+    header {
+      position:sticky; top:0; z-index:20;
+      background:rgba(5,54,216,.94);
+      backdrop-filter: blur(10px);
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+    .nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0; gap:20px;
+    }
+    .brand {
+      display:flex; align-items:center; gap:14px; color:white;
+      font-weight:700;
+    }
+    .brand img {
+      width:64px; height:64px; object-fit:cover; border-radius:14px;
+      background:#fff; padding:4px; box-shadow: var(--shadow);
+    }
+    .brand-text small { display:block; font-weight:400; opacity:.85; }
+    .menu {
+      display:flex; gap:20px; color:#fff; font-weight:600; flex-wrap:wrap; align-items:center;
+    }
+    .menu a:hover { opacity:.85; }
+
+    /* Cart icon in header */
+    .cart-link {
+      position:relative; display:flex; align-items:center; gap:6px;
+      background:var(--red); color:#fff; padding:10px 16px; border-radius:12px;
+      font-weight:700; font-size:.95rem; transition:.2s;
+    }
+    .cart-link:hover { background:var(--red-dark); transform:translateY(-1px); }
+    .cart-icon { font-size:1.2rem; }
+    .cart-count-badge {
+      background:#fff; color:var(--red); font-size:.75rem; font-weight:800;
+      min-width:20px; height:20px; border-radius:50%; display:grid; place-items:center;
+      line-height:1;
+    }
+
+    /* Cart page */
+    .cart-page { padding:40px 0 80px; }
+    .cart-page h1 {
+      font-size: clamp(1.7rem, 2.3vw, 2.5rem); margin:0 0 8px;
+    }
+    .cart-page .subtitle { color:var(--muted); margin:0 0 28px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align:center; padding:80px 20px;
+    }
+    .empty-state .icon { font-size:4rem; margin-bottom:16px; }
+    .empty-state h2 { margin:0 0 8px; }
+    .empty-state p { color:var(--muted); margin:0 0 24px; }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:14px 20px; border-radius:14px; font-weight:700; transition:.2s;
+      border:none; cursor:pointer; font-size:1rem;
+    }
+    .btn-primary { background:var(--red); color:#fff; box-shadow: var(--shadow); }
+    .btn-primary:hover { background:var(--red-dark); transform:translateY(-1px); }
+    .btn-secondary { background:#fff; color:var(--blue); }
+    .btn-secondary:hover { background:#f0f2fa; }
+    .btn-outline {
+      background:transparent; color:var(--red); border:2px solid var(--red);
+      padding:10px 16px; border-radius:12px; font-weight:700; cursor:pointer;
+      font-size:.9rem; transition:.2s;
+    }
+    .btn-outline:hover { background:var(--red); color:#fff; }
+    .btn-small {
+      padding:8px 12px; font-size:.85rem; border-radius:10px;
+    }
+
+    /* Cart layout */
+    .cart-layout {
+      display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:start;
+    }
+
+    /* Cart items */
+    .cart-items { display:flex; flex-direction:column; gap:16px; }
+    .cart-item {
+      background:#fff; border-radius:22px; padding:18px; box-shadow: var(--shadow);
+      display:grid; grid-template-columns:100px 1fr auto; gap:16px; align-items:center;
+    }
+    .cart-item img {
+      width:100px; height:100px; object-fit:cover; border-radius:16px;
+    }
+    .cart-item-info h3 { margin:0 0 4px; font-size:1.05rem; }
+    .cart-item-info .price { color:var(--red); font-weight:700; margin:0; }
+    .cart-item-actions {
+      display:flex; flex-direction:column; align-items:end; gap:10px;
+    }
+    .qty-control {
+      display:flex; align-items:center; gap:8px;
+    }
+    .qty-btn {
+      width:34px; height:34px; border-radius:10px; border:2px solid var(--blue);
+      background:#fff; color:var(--blue); font-weight:700; font-size:1.1rem;
+      cursor:pointer; display:grid; place-items:center; transition:.15s;
+    }
+    .qty-btn:hover { background:var(--blue); color:#fff; }
+    .qty-value { font-weight:700; min-width:24px; text-align:center; }
+    .remove-btn {
+      background:none; border:none; color:var(--muted); cursor:pointer;
+      font-size:.85rem; text-decoration:underline; transition:.15s;
+    }
+    .remove-btn:hover { color:var(--red); }
+
+    /* Summary */
+    .cart-summary {
+      background:#fff; border-radius:22px; padding:26px; box-shadow: var(--shadow);
+      position:sticky; top:100px;
+    }
+    .cart-summary h2 { margin:0 0 18px; font-size:1.3rem; }
+    .summary-row {
+      display:flex; justify-content:space-between; padding:8px 0;
+      border-bottom:1px solid #eef1f8; font-size:.95rem;
+    }
+    .summary-row.total {
+      border-bottom:none; border-top:2px solid var(--blue); margin-top:8px;
+      padding-top:14px; font-size:1.15rem; font-weight:700;
+    }
+    .summary-row .label { color:var(--muted); }
+    .summary-row .value { font-weight:600; }
+    .summary-actions { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+    .whatsapp-btn {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      background:#25d366; color:#fff; padding:16px; border-radius:14px;
+      font-weight:700; font-size:1.05rem; transition:.2s; border:none; cursor:pointer;
+      box-shadow: 0 8px 20px rgba(37,211,102,.25);
+    }
+    .whatsapp-btn:hover { background:#20bd5a; transform:translateY(-1px); }
+    .clear-btn {
+      background:#fff; color:var(--red); border:2px solid var(--red);
+      padding:12px; border-radius:14px; font-weight:700; cursor:pointer;
+      transition:.2s; text-align:center;
+    }
+    .clear-btn:hover { background:var(--red); color:#fff; }
+    .continue-link {
+      display:block; text-align:center; margin-top:12px; color:var(--blue);
+      font-weight:600; font-size:.95rem;
+    }
+    .continue-link:hover { text-decoration:underline; }
+
+    /* Footer */
+    footer {
+      background:#08184f; color:#fff; padding:26px 0;
+    }
+    footer .foot {
+      display:flex; justify-content:space-between; gap:20px; align-items:center; flex-wrap:wrap;
+    }
+
+    /* WhatsApp float */
+    .whatsapp {
+      position:fixed; right:18px; bottom:18px; z-index:30;
+      background:#25d366; color:#fff; width:62px; height:62px; border-radius:50%;
+      display:grid; place-items:center; box-shadow: var(--shadow); font-size:1.7rem;
+    }
+
+    @media (max-width: 980px) {
+      .cart-layout { grid-template-columns:1fr; }
+      .cart-summary { position:static; }
+    }
+    @media (max-width: 680px) {
+      .menu { display:none; }
+      .cart-item {
+        grid-template-columns:80px 1fr; gap:12px;
+      }
+      .cart-item img { width:80px; height:80px; }
+      .cart-item-actions {
+        grid-column: 1 / -1; flex-direction:row; justify-content:space-between; align-items:center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.jpeg" alt="Logo Dudota">
+        <div class="brand-text">
+          Dudota Doces
+          <small>Umuarama e região</small>
+        </div>
+      </a>
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="index.html#produtos">Produtos</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#contato">Contato</a>
+        <a class="cart-link" href="carrinho.html">
+          <span class="cart-icon">🛒</span>
+          Carrinho
+          <span class="cart-count-badge" id="cart-count">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="cart-page">
+    <div class="container">
+      <h1>Carrinho de Compras</h1>
+      <p class="subtitle" id="cart-subtitle">Nenhum item adicionado</p>
+      <div id="cart-content"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div><strong>Dudota Doces</strong><br>Tradição, qualidade e sabor em Umuarama.</div>
+      <div>WhatsApp: (44) 99884-0243</div>
+    </div>
+  </footer>
+
+  <a class="whatsapp" target="_blank" rel="noopener" href="https://wa.me/5544998840243?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20Dudota%20Doces." aria-label="WhatsApp">💬</a>
+
+  <script src="cart.js"></script>
+  <script>
+    function renderCartPage() {
+      const cart = getCart();
+      const content = document.getElementById('cart-content');
+      const subtitle = document.getElementById('cart-subtitle');
+
+      if (cart.length === 0) {
+        subtitle.textContent = 'Nenhum item adicionado';
+        content.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">🛒</div>
+            <h2>Seu carrinho está vazio</h2>
+            <p>Adicione produtos deliciosos da Dudota Doces e finalize pelo WhatsApp.</p>
+            <a class="btn btn-primary" href="index.html#produtos">Ver produtos</a>
+          </div>
+        `;
+        return;
+      }
+
+      const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+      const totalPrice = cart.reduce((s, i) => {
+        const p = PRODUCTS.find(pr => pr.id === i.id);
+        return s + (p ? p.price * i.qty : 0);
+      }, 0);
+
+      subtitle.textContent = `${totalItems} ${totalItems === 1 ? 'item' : 'itens'} no carrinho`;
+
+      let itemsHTML = '';
+      cart.forEach(item => {
+        const product = PRODUCTS.find(p => p.id === item.id);
+        if (!product) return;
+        const subtotal = product.price * item.qty;
+        itemsHTML += `
+          <div class="cart-item">
+            <img src="${product.image}" alt="${product.name}">
+            <div class="cart-item-info">
+              <h3>${product.name}</h3>
+              <p class="price">R$ ${product.price.toFixed(2).replace('.', ',')} cada</p>
+              <p style="color:var(--muted);margin:4px 0 0;font-size:.9rem;">Subtotal: <strong style="color:var(--text);">R$ ${subtotal.toFixed(2).replace('.', ',')}</strong></p>
+            </div>
+            <div class="cart-item-actions">
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('${product.id}', -1)">−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn" onclick="updateQty('${product.id}', 1)">+</button>
+              </div>
+              <button class="remove-btn" onclick="removeFromCart('${product.id}')">Remover</button>
+            </div>
+          </div>
+        `;
+      });
+
+      const whatsappMsg = generateWhatsAppMessage();
+      const whatsappURL = `https://wa.me/5544998840243?text=${whatsappMsg}`;
+
+      content.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items">
+            ${itemsHTML}
+          </div>
+          <div class="cart-summary">
+            <h2>Resumo do pedido</h2>
+            <div class="summary-row">
+              <span class="label">Itens</span>
+              <span class="value">${totalItems}</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Subtotal</span>
+              <span class="value">R$ ${totalPrice.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Entrega</span>
+              <span class="value">A combinar</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total estimado</span>
+              <span>R$ ${totalPrice.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="summary-actions">
+              <a class="whatsapp-btn" href="${whatsappURL}" target="_blank" rel="noopener">
+                📲 Enviar pedido pelo WhatsApp
+              </a>
+              <button class="clear-btn" onclick="clearCart()">Limpar carrinho</button>
+              <a class="continue-link" href="index.html#produtos">← Continuar comprando</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCartPage);
+  </script>
+</body>
+</html>
